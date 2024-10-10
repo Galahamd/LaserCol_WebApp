@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
+import { GetUserById } from '../path/to/auth.helper'; // Adjust the path accordingly
 
 const CartSectionDetails = ({ products }) => {
-  const APIURL = process.env.NEXT_PUBLIC_API_URL
-  const [id, setId] = useState("")
+  const APIURL = process.env.NEXT_PUBLIC_API_URL;
+  const [id, setId] = useState("");
+  const [userAddress, setUserAddress] = useState(""); // State to store user address
+  const [loading, setLoading] = useState(true); // State for loading status
 
   // Function to calculate the total price of products
   const calculateTotalPrice = () => {
@@ -15,9 +18,28 @@ const CartSectionDetails = ({ products }) => {
         total += Number(product.valor); // Add product.valor to total if it exists
       }
     });
-
     return total; // Return the total price
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userSession = JSON.parse(localStorage.getItem("userSession"));
+        const userId = userSession.id; // Get user ID from session
+        const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+
+        // Fetch user data
+        const user = await GetUserById(userId, token);
+        setUserAddress(user.address); // Assuming the address is a field in the user object
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchUserData(); // Call the fetch function
+  }, []);
 
   useEffect(() => {
     if (products) {
@@ -35,7 +57,7 @@ const CartSectionDetails = ({ products }) => {
                 "precio": product.valor,
                 "image": product.imgUrl
               }
-            )
+            );
           }),
           email: JSON.parse(localStorage.getItem("userSession")).email,
           cartId: localStorage.getItem("cartId"),
@@ -44,10 +66,10 @@ const CartSectionDetails = ({ products }) => {
       })
         .then(res => res.json())
         .then(res => {
-          setId(res.id)
-        })
+          setId(res.id);
+        });
     }
-  }, [products])
+  }, [products]);
 
   const totalPrice = calculateTotalPrice(); // Calculate total price
   const descuento = totalPrice * 0.15; // 15% of the total price
@@ -59,9 +81,13 @@ const CartSectionDetails = ({ products }) => {
         <>
           <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg lg:mt-auto mb-6 w-full sm:w-[100%] mx-auto">
             <h2 className="text-lg font-bold mb-4 h-[30px] text-center sm:text-left">ENTREGA</h2>
-            <p className="mb-3 text-sm text-center md:text-base sm:text-left">
-              Entregar a mi domicilio <a href="#" className="text-pink-500 underline">Necochea</a>
-            </p>
+            {loading ? ( // Display loading state
+              <p className="mb-3 text-sm text-center md:text-base sm:text-left">Cargando dirección...</p>
+            ) : (
+              <p className="mb-3 text-sm text-center md:text-base sm:text-left">
+                Entregar a mi domicilio <a href="#" className="text-pink-500 underline">{userAddress || "No disponible"}</a>
+              </p>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <span className="text-xs sm:text-sm">⚠️IMPORTANTE: Tiempo de preparación y envío entre 7 a 10 días hábiles</span>
