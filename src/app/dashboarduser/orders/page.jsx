@@ -1,6 +1,6 @@
 'use client'
 
-import { getOrders } from '@/helpers/getOrder.helper';
+import { getUserOrders } from '@/helpers/getOrder.helper'; // Import the function from your order service
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -9,36 +9,43 @@ const Orders = () => {
   const router = useRouter();
   const [userSession, setUserSession] = useState();
   const [orders, setOrders] = useState([]);
-  const [cartId, setCartId] = useState(null); // Nuevo estado para cartId
+  const [cartId, setCartId] = useState(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       const userData = localStorage.getItem('userSession');
       setUserSession(JSON.parse(userData));
       const storedCartId = localStorage.getItem('cartId');
-      setCartId(storedCartId); // Guardar cartId en el estado
+      setCartId(storedCartId);
     }
   }, []);
 
   const fetchData = async () => {
-    if (userSession?.token && cartId) { // Verificar que tanto userSession como cartId estén disponibles
-      const ordersResponse = await getOrders(userSession?.token, cartId, userSession?.id );
-      setOrders(ordersResponse);
+    if (userSession?.token) {
+      try {
+        // Fetch orders using getUserOrders function
+        const ordersResponse = await getUserOrders(userSession.id);
+        setOrders(ordersResponse);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
     }
   };
 
   useEffect(() => {
     if (userSession?.id) {
-      userSession?.id === undefined ? router.push('/login') : fetchData();
+      fetchData();
+    } else {
+      router.push('/login');
     }
-  }, [userSession, cartId]); // Añadir cartId como dependencia
+  }, [userSession]);
 
   return (
     <div className="p-4 lg:h-[1000px]">
       <h1 className="mt-10 mb-4 text-2xl font-bold text-center">MIS PEDIDOS</h1>
 
       <div className="flex items-center justify-between mb-4">
-        <Link href={"/dashboarduser"} className=" text-[11px] ml-20 lg:m-2 bg-pink-700 p-2 rounded-xl lg:text-sm">
+        <Link href={"/dashboarduser"} className="text-[11px] ml-20 lg:m-2 bg-pink-700 p-2 rounded-xl lg:text-sm">
           VOLVER A MI PERFIL
         </Link>
       </div>
@@ -56,9 +63,7 @@ const Orders = () => {
               </div>
               <div className="text-right">
                 <p className="mb-4 text-sm">Numero de pedido: #{order.id}</p>
-                <span className="px-3 py-1 text-sm text-white bg-green-500 rounded-full">
-                 
-                </span>
+                <span className="px-3 py-1 text-sm text-white bg-green-500 rounded-full"></span>
               </div>
             </div>
             <div>
