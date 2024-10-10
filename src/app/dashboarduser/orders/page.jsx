@@ -71,10 +71,10 @@ const Orders = () => {
               </div>
             </div>
             <div>
-              <p>Estado del envío: INFO DEL BACK de EN PREPARACION</p>
-              <p>Recibirás información de tu envío a través de tu email, si ya lo recibiste desestimá este mensaje</p>
+              <p>Estado del envío: EN PREPARACION</p>
+              {/* <p>Recibirás información de tu envío a través de tu email, si ya lo recibiste desestimá este mensaje</p>
               <p>¿Ya recibiste tu envío?</p>
-              <p>Confírmanos acá: APRETAR BOTÓN DE ESTADO QUE CAMBIE A RECIBIDO</p>
+              <p>Confírmanos acá: APRETAR BOTÓN DE ESTADO QUE CAMBIE A RECIBIDO</p> */}
             </div>
           </div>
         ))

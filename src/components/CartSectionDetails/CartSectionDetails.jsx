@@ -3,6 +3,7 @@ import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
 import { GetUserById } from '../../helpers/auth.helper'; // Adjust the path accordingly
 import { createOrder } from '../../helpers/getOrder.helper'; // Import the createOrder function
+import Swal from 'sweetalert2';
 
 const CartSectionDetails = ({ products }) => {
   const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -69,19 +70,28 @@ const CartSectionDetails = ({ products }) => {
   // Function to handle order creation
   const handleCreateOrder = async () => {
     try {
-      const userSession = JSON.parse(localStorage.getItem("userSession"));
-      const token = userSession.token; // Adjust this based on where you store the token
-      const userId = userSession.id;
+        const userSession = JSON.parse(localStorage.getItem("userSession"));
+        const token = userSession.token; // Adjust this based on where you store the token
+        const userId = userSession.id;
 
-      // Call the createOrder function
-      const createdOrder = await createOrder(userId, token);
-      console.log('Order created successfully:', createdOrder);
-      // Additional actions after order creation (e.g., redirect or show confirmation)
+        // Call the createOrder function
+        const createdOrder = await createOrder(userId, token);
+        console.log('Order created successfully:', createdOrder);
+
+        // Show a Swal alert after the order is created
+        Swal.fire({
+            title: 'Orden creada',
+            text: 'Tu orden ha sido creada exitosamente.',
+            icon: 'success',
+            confirmButtonText: 'Ok'
+        });
+
+        // Additional actions after order creation (e.g., redirect or show confirmation)
     } catch (error) {
-      console.error('Error creating order:', error);
-      // Handle error (e.g., show a message to the user)
+        console.error('Error creating order:', error);
+        // Handle error (e.g., show a message to the user)
     }
-  };
+};
 
   return (
     <>
