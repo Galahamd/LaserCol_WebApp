@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
-import { GetUserById } from '../path/to/auth.helper'; // Adjust the path accordingly
+import { GetUserById } from '../../helpers/auth.helper'; // Adjust the path accordingly
 
 const CartSectionDetails = ({ products }) => {
   const APIURL = process.env.NEXT_PUBLIC_API_URL;
