@@ -12,12 +12,17 @@ const Orders = () => {
   const [cartId, setCartId] = useState(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const userData = localStorage.getItem('userSession');
-      setUserSession(JSON.parse(userData));
-      const storedCartId = localStorage.getItem('cartId');
-      setCartId(storedCartId);
-    }
+    const initializeSession = () => {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const userData = localStorage.getItem('userSession');
+        if (userData) {
+          setUserSession(JSON.parse(userData));
+        }
+        const storedCartId = localStorage.getItem('cartId');
+        setCartId(storedCartId);
+      }
+    };
+    initializeSession();
   }, []);
 
   const fetchData = async () => {
@@ -32,7 +37,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    if (userSession?.id) {
+    if (userSession) {
       fetchData();
     } else {
       router.push('/login');
