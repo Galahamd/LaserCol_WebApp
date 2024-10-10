@@ -90,17 +90,17 @@ const CartSectionDetails = ({ products }) => {
                     value={discountCode}
                     onChange={handleInputChange}
                     className="p-2 border rounded-md w-full"
-                    placeholder="Ingresa tu código de descuento"
+                    placeholder="BIENVENIDO15%OFF"
                   />
                   <button
                     className={`ml-2 p-2 rounded-md bg-pink-500 text-white ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => setShowInput(false)}
                     disabled={isButtonDisabled}
                   >
-                    Reclamar cupón
+                    Canjear
                   </button>
                 </div>
-                <p className="text-sm text-gray-600">Descuento de bienvenida! Ingresa acá el cupón <b>BIENVENIDO15%OFF</b> para canjearlo.</p>
+                <p className="text-sm text-gray-800">Descuento de bienvenida😎 Ingresa acá el cupón <b>BIENVENIDO15%OFF</b> para canjearlo.</p>
               </div>
             ) : (
               <div className="flex items-center justify-between mb-4">
