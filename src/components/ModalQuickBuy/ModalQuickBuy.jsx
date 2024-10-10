@@ -14,9 +14,9 @@ const ModalQuickBuy = ({ show, onClose, product}) => {
     try {
       setLoading(true);
       setError(null);
-
-   
-      await QuickAddtoCart(product.id);
+  
+      // Pass quantity to QuickAddtoCart
+      await QuickAddtoCart(product.id, quantity);
       onClose(); 
     } catch (err) {
       setError('Error al agregar el producto al carrito. Inténtalo de nuevo.');
@@ -24,6 +24,7 @@ const ModalQuickBuy = ({ show, onClose, product}) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

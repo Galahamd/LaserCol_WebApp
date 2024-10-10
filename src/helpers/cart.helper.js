@@ -55,14 +55,14 @@ export async function AddtoCart(cartId, productId, router, cantidad) {
     throw new Error(`Failed to add product to cart: ${error.message}`);
   }
 }
-export async function QuickAddtoCart(productId) {
+export async function QuickAddtoCart(productId, quantity) {
   try {
     const cartId = localStorage.getItem('cartId');
     if (!cartId) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Inicia sesion para poder añadir el producto'
+        text: 'Inicia sesión para poder añadir el producto'
       });
       return;
     }
@@ -71,8 +71,8 @@ export async function QuickAddtoCart(productId) {
       headers: {
         "Content-type": "application/json"
       },
-      body:JSON.stringify({
-        quantity: Number(cantidad)
+      body: JSON.stringify({
+        quantity: Number(quantity) // Use the passed quantity
       })
     });
     
@@ -82,12 +82,14 @@ export async function QuickAddtoCart(productId) {
         title: 'Agregado',
         text: 'Producto agregado al carrito exitosamente.'
       });
+    } else {
+      throw new Error('Error al agregar el producto al carrito');
     }
-    
   } catch (error) {
     throw new Error(`Failed to add product to cart: ${error.message}`);
   }
 }
+
 
 export async function DeleteProductFromCart(cartId, productId, router) {
   // Prompt the user for confirmation
