@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { AddtoCart } from '@/helpers/cart.helper';
 import Swal from 'sweetalert2';
 
-const AddToCartButton = ({ productId }) => {
+const AddToCartButton = ({ productId, cantidad }) => {
   const router = useRouter(); // Usar el hook aquí
 
   const handleAddToCart = async () => {

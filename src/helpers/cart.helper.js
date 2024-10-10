@@ -35,13 +35,16 @@ export async function GetCart(userId) {
   }
 }
 
-export async function AddtoCart(cartId, productId, router) {
+export async function AddtoCart(cartId, productId, router, cantidad) {
   try {
     const res = await fetch(`${API_URL}/cart/${cartId}/${productId}`, {
       method: 'POST',
       headers: {
         "Content-type": "application/json"
-      }
+      },
+      body:JSON.stringify({
+        quantity: Number(cantidad)
+      })
     });
 
     if (res.ok) {
@@ -67,7 +70,10 @@ export async function QuickAddtoCart(productId) {
       method: 'POST',
       headers: {
         "Content-type": "application/json"
-      }
+      },
+      body:JSON.stringify({
+        quantity: Number(cantidad)
+      })
     });
     
     if (res.ok) {
