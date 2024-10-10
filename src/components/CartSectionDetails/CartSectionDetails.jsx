@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
 import { GetUserById } from '../../helpers/auth.helper'; // Adjust the path accordingly
+import { createOrder } from '../../helpers/getOrder.helper'; // Import the createOrder function
 
 const CartSectionDetails = ({ products }) => {
   const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -65,6 +66,23 @@ const CartSectionDetails = ({ products }) => {
     }
   };
 
+  // Function to handle order creation
+  const handleCreateOrder = async () => {
+    try {
+      const userSession = JSON.parse(localStorage.getItem("userSession"));
+      const token = userSession.token; // Adjust this based on where you store the token
+      const userId = userSession.id;
+
+      // Call the createOrder function
+      const createdOrder = await createOrder(userId, token);
+      console.log('Order created successfully:', createdOrder);
+      // Additional actions after order creation (e.g., redirect or show confirmation)
+    } catch (error) {
+      console.error('Error creating order:', error);
+      // Handle error (e.g., show a message to the user)
+    }
+  };
+
   return (
     <>
       {id && products && products.length > 0 && (
@@ -83,7 +101,7 @@ const CartSectionDetails = ({ products }) => {
 
           <div className="bg-pink-200 p-4 md:p-6 rounded-lg shadow-lg lg:h-[270px] mb-10 w-full sm:w-[100%] mx-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg text-md ">Subtotal</h2>
+              <h2 className="text-lg text-md">Subtotal</h2>
               <span className="text-lg font-semibold text-md">${totalPrice.toFixed(2)}</span>
             </div>
 
@@ -125,6 +143,14 @@ const CartSectionDetails = ({ products }) => {
               Psst psst, no te olvidas nada? Agrega más productos haciendo click <b>aca</b>😉
             </Link>
 
+            {/* Button to create the order */}
+            <button
+              className="p-2 bg-blue-500 text-white rounded-md mt-4"
+              onClick={handleCreateOrder}
+            >
+              Crear Orden
+            </button>
+            
             <CheckoutMercadoPago pagoId={id} />
           </div>
         </>

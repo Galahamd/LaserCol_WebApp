@@ -41,4 +41,28 @@ export const getUserOrders = async (userId, token) => {
       throw error; // Re-throw the error for further handling
     }
   };
+
+
+  export async function createOrder(userId, token) {
+    try {
+        const response = await fetch(`${API_URL}/orders/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`, // Include the token for authorization
+            },
+            body: JSON.stringify({ userId }), // Send userId in the request body
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`); // Handle non-2xx responses
+        }
+
+        const data = await response.json(); // Parse the JSON response
+        return data; // Return the created order data
+    } catch (error) {
+        console.error('Error creating order:', error);
+        throw error; // Rethrow the error for further handling
+    }
+}
   
