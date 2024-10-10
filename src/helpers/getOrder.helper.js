@@ -45,7 +45,7 @@ export const getUserOrders = async (userId, token) => {
 
   export async function createOrder(userId, token) {
     try {
-        const response = await fetch(`${API_URL}/orders/create`, {
+        const response = await fetch(`${API_URL}/orders/create-from-cart/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
