@@ -1,6 +1,6 @@
 'use client'
 
-import { getUserOrders } from '@/helpers/getOrder.helper'; // Import the function from your order service
+import { getUserOrders } from '@/helpers/getOrder.helper';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ const Orders = () => {
   const fetchData = async () => {
     if (userSession?.token) {
       try {
-        // Fetch orders using getUserOrders function
         const ordersResponse = await getUserOrders(userSession.id);
         setOrders(ordersResponse);
       } catch (error) {
