@@ -1,6 +1,7 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function getOrders(token, cartId, id) {
     try {
-        const res = await fetch(`https://back-deploy-5y3a.onrender.com/${id}/orders`, {
+        const res = await fetch(`${API_URL}/${id}/orders`, {
             method: 'GET',
             cache: "no-cache",
             headers: {
@@ -20,7 +21,7 @@ export async function getOrders(token, cartId, id) {
 
 export const getUserOrders = async (userId) => {
     try {
-      const response = await fetch(`http://your-backend-url/api/userorder/${userId}`, {
+      const response = await fetch(`${API_URL}/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
