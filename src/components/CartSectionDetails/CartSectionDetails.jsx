@@ -1,65 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
 
 const CartSectionDetails = ({ products }) => {
-  const APIURL = process.env.NEXT_PUBLIC_API_URL;
-  const [id, setId] = useState("");
-  const [showInput, setShowInput] = useState(true); // Estado para controlar si se muestra el input
-  const [discountValue, setDiscountValue] = useState(0); // Estado para el valor del descuento
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
+  const [id, setId] = useState("")
+  const [discountCode, setDiscountCode] = useState("");
+  const [showInput, setShowInput] = useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  // Función para calcular el precio total de los productos
   const calculateTotalPrice = () => {
     if (!Array.isArray(products)) return 0;
-    let total = 0;
+    let total = 0; 
     products.forEach(product => {
       if (product.valor) {
         total += Number(product.valor);
       }
     });
+
     return total;
-  };
-
-  
-  const handleCouponClaim = () => {
-    setDiscountValue(calculateTotalPrice() * 0.15); 
-    setShowInput(false); 
-  };
-
- 
-  const handleRemoveCoupon = () => {
-    setDiscountValue(0); 
-    setShowInput(true); 
   };
 
   useEffect(() => {
     if (products) {
       fetch(`${APIURL}/mercado-pago/crear-preferencia`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          items: products.map(product => ({
-            titulo: product.nombre,
-            cantidad: 1,
-            precio: product.valor,
-            image: product.imgUrl,
-          })),
-          email: JSON.parse(localStorage.getItem('userSession')).email,
-          cartId: localStorage.getItem('cartId'),
-          userId: JSON.parse(localStorage.getItem('userSession')).id,
-        }),
+          items: products.map(product => {
+            return {
+              "titulo": product.nombre,
+              "cantidad": 1,
+              "precio": product.valor,
+              "image": product.imgUrl
+            };
+          }),
+          email: JSON.parse(localStorage.getItem("userSession")).email,
+          cartId: localStorage.getItem("cartId"),
+          userId: JSON.parse(localStorage.getItem("userSession")).id
+        })
       })
         .then(res => res.json())
         .then(res => {
-          setId(res.id);
-        });
+          setId(res.id)
+        })
     }
   }, [products]);
 
   const totalPrice = calculateTotalPrice();
-  const precioTotal = totalPrice - discountValue; // Precio total después del descuento
+  const descuento = totalPrice * 0.15;
+  const precioTotal = totalPrice - descuento;
+
+  // Check if the input matches the correct discount code
+  const handleInputChange = (e) => {
+    setDiscountCode(e.target.value);
+    setIsButtonDisabled(e.target.value !== "BIENVENIDO15%OFF");
+  };
 
   return (
     <>
@@ -74,45 +72,49 @@ const CartSectionDetails = ({ products }) => {
               <div className="flex items-center space-x-2">
                 <span className="text-xs sm:text-sm">⚠️IMPORTANTE: Tiempo de preparación y envío entre 10 a 15 días hábiles</span>
               </div>
-              <span className="text-xs font-bold text-gray-800 sm:text-sm">Gratis</span>
+              
             </div>
           </div>
 
           <div className="bg-pink-200 p-4 md:p-6 rounded-lg shadow-lg lg:h-[270px] mb-10 w-full sm:w-[100%] mx-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg text-md">Subtotal</h2>
+              <h2 className="text-lg text-md ">Subtotal</h2>
               <span className="text-lg font-semibold text-md">${totalPrice.toFixed(2)}</span>
             </div>
-
+            
             {showInput ? (
-              <div className="flex items-center justify-between mb-4">
-                <input 
-                  type="text" 
-                  placeholder="Código de descuento" 
-                  className="p-2 border border-pink-700 rounded"
-                />
-                <button 
-                  onClick={handleCouponClaim}
-                  className="bg-pink-600 text-white px-4 py-2 rounded ml-2"
-                >
-                  Reclamar cupón
-                </button>
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <input
+                    type="text"
+                    value={discountCode}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded-md w-full"
+                    placeholder="Ingresa tu código de descuento"
+                  />
+                  <button
+                    className={`ml-2 p-2 rounded-md bg-pink-500 text-white ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => setShowInput(false)}
+                    disabled={isButtonDisabled}
+                  >
+                    Reclamar cupón
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600">Descuento de bienvenida! Ingresa acá el cupón <b>BIENVENIDO15%OFF</b> para canjearlo.</p>
               </div>
             ) : (
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg text-md">Descuento</h2>
-                <div className="flex items-center">
-                  <span className="text-lg font-semibold text-md">${discountValue.toFixed(2)}</span>
-                  <button 
-                    onClick={handleRemoveCoupon}
-                    className="ml-2 text-pink-600 font-bold"
-                  >
-                    X
-                  </button>
-                </div>
+                <span className="text-lg font-semibold text-md">${descuento.toFixed(2)}</span>
+                <button
+                  className="ml-2 p-1 text-pink-600 font-bold"
+                  onClick={() => setShowInput(true)}
+                >
+                  ✖
+                </button>
               </div>
             )}
-
+            
             <div className="flex items-center justify-between mb-4 text-lg">
               <h2>Total</h2>
               <span className='font-semibold'>${precioTotal.toFixed(2)}</span>
@@ -128,6 +130,6 @@ const CartSectionDetails = ({ products }) => {
       )}
     </>
   );
-};
+}
 
 export default CartSectionDetails;
