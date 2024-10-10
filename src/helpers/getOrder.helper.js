@@ -21,7 +21,7 @@ export async function getOrders(token, cartId, id) {
 
 export const getUserOrders = async (userId) => {
     try {
-      const response = await fetch(`${API_URL}/${userId}`, {
+      const response = await fetch(`${API_URL}/orders/userorder/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
