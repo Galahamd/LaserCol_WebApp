@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
 import { GetUserById } from '../path/to/auth.helper'; // Adjust the path accordingly
 
