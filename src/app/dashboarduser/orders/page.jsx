@@ -39,8 +39,8 @@ const Orders = () => {
   useEffect(() => {
     if (userSession) {
       fetchData();
-    } else {
-      router.push('/login');
+    // } else {
+    //   router.push('/login');
     }
   }, [userSession]);
 
