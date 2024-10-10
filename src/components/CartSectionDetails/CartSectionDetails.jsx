@@ -20,7 +20,6 @@ const CartSectionDetails = ({ products }) => {
   };
 
   useEffect(() => {
-    
     if (products) {
       fetch(`${APIURL}/mercado-pago/crear-preferencia`, {
         method: "POST",
@@ -35,15 +34,12 @@ const CartSectionDetails = ({ products }) => {
                 "cantidad": 1,
                 "precio": product.valor,
                 "image": product.imgUrl
-
               }
             )
-          }
-        ),
-        email:JSON.parse(localStorage.getItem("userSession")).email,
-        cartId:localStorage.getItem("cartId"),
-        userId:JSON.parse(localStorage.getItem("userSession")).id
-        
+          }),
+          email: JSON.parse(localStorage.getItem("userSession")).email,
+          cartId: localStorage.getItem("cartId"),
+          userId: JSON.parse(localStorage.getItem("userSession")).id
         })
       })
         .then(res => res.json())
@@ -54,14 +50,14 @@ const CartSectionDetails = ({ products }) => {
   }, [products])
 
   const totalPrice = calculateTotalPrice(); // Calculate total price
+  const descuento = totalPrice * 0.15; // 15% of the total price
+  const precioTotal = totalPrice - descuento; // Total price after discount
 
   return (
     <>
-
       {id && products && products.length > 0 && (
         <>
-
-          <div className="bg-white p-4 md:p-6  rounded-lg shadow-lg lg:mt-auto mb-6 w-full sm:w-[100%] mx-auto">
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg lg:mt-auto mb-6 w-full sm:w-[100%] mx-auto">
             <h2 className="text-lg font-bold mb-4 h-[30px] text-center sm:text-left">ENTREGA</h2>
             <p className="mb-3 text-sm text-center md:text-base sm:text-left">
               Entregar a mi domicilio <a href="#" className="text-pink-500 underline">Necochea</a>
@@ -80,23 +76,18 @@ const CartSectionDetails = ({ products }) => {
               <span className="text-lg font-semibold text-md">${totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg text-md ">Envío</h2>
-              <span className="text-lg font-semibold text-md">Gratis</span>
+              <h2 className="text-lg text-md ">Descuento</h2>
+              <span className="text-lg font-semibold text-md">${descuento.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between mb-4 text-lg">
               <h2>Total</h2>
-              <span className='font-semibold'>$100000</span>
+              <span className='font-semibold'>${precioTotal.toFixed(2)}</span>
             </div>
 
-            <Link href={'/products'} className="items-center text-center lg:ml-72 mt-10 space-x-2 text-pink-700 mb-10 text-[13px]  sm:text-lg font-bold">
+            <Link href={'/products'} className="items-center text-center lg:ml-72 mt-10 space-x-2 text-pink-700 mb-10 text-[13px] sm:text-lg font-bold">
               Psst psst, no te olvidas nada? Agrega más productos haciendo click <b>aca</b>😉
             </Link>
 
-            {/* <button
-                  className="w-full py-3 mt-5 text-center text-white bg-pink-500 rounded-lg hover:bg-pink-700"
-                >
-                  FINALIZAR COMPRA
-                </button> */}
             <CheckoutMercadoPago pagoId={id} />
           </div>
         </>
@@ -105,4 +96,4 @@ const CartSectionDetails = ({ products }) => {
   );
 }
 
-export default CartSectionDetails
+export default CartSectionDetails;
