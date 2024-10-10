@@ -19,14 +19,14 @@ export async function getOrders(token, cartId, id) {
 
 // services/orderService.js
 
-export const getUserOrders = async (userId) => {
+export const getUserOrders = async (userId, token) => {
     try {
       const response = await fetch(`${API_URL}/orders/userorder/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           // Add any necessary authentication headers here
-        //   'Authorization': `Bearer ${token}`, // Example
+          'Authorization': `Bearer ${token}`, // Example
         },
       });
   

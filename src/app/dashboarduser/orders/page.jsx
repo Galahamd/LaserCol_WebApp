@@ -23,7 +23,7 @@ const Orders = () => {
   const fetchData = async () => {
     if (userSession?.token) {
       try {
-        const ordersResponse = await getUserOrders(userSession.id);
+        const ordersResponse = await getUserOrders(userSession.id, userSession.token);
         setOrders(ordersResponse);
       } catch (error) {
         console.error('Error fetching orders:', error);
