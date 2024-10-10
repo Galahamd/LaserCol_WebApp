@@ -243,7 +243,7 @@ const ProfileComponent = () => {
                 <p className="text-gray-800">{userData?.address}</p>
               )}
             </div>
-            <div>
+            {/* <div>
               <h4 className="text-gray-600">Fecha de nacimiento</h4>
               {isEditing ? (
                 <input
@@ -256,7 +256,7 @@ const ProfileComponent = () => {
               ) : (
                 <p className="text-gray-800">{userData?.birthDate}</p>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="text-right">
             {isEditing ? (
