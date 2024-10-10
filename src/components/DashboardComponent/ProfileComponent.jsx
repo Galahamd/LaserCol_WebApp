@@ -109,8 +109,8 @@ const ProfileComponent = () => {
       }
     
       // Create an object with only the fields that should be updated
-      const { name, birthDate, country, city, address } = editedData;
-      const dataToUpdate = { name, birthDate, country, city, address };
+      const { name, birthDate, country, city, address, phone } = editedData; // Include phone here
+      const dataToUpdate = { name, birthDate, country, city, address, phone };
     
       try {
         const updatedUser = await UpdateUser(userSession.id, dataToUpdate, userSession.token);
