@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import CheckoutMercadoPago from '../mercadoPago/mercadoPago';
 
 const CartSectionDetails = ({ products }) => {
-  const APIURL = process.env.NEXT_PUBLIC_API_URL
-  const [id, setId] = useState("")
+  const APIURL = process.env.NEXT_PUBLIC_API_URL;
+  const [id, setId] = useState("");
   const [discountCode, setDiscountCode] = useState("");
-  const [showInput, setShowInput] = useState(true);
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const calculateTotalPrice = () => {
     if (!Array.isArray(products)) return 0;
-    let total = 0; 
+    let total = 0;
     products.forEach(product => {
       if (product.valor) {
         total += Number(product.valor);
       }
     });
-
     return total;
   };
+
+  const totalPrice = calculateTotalPrice();
+  const descuento = isCouponApplied ? totalPrice * 0.15 : 0; // Solo aplica el descuento si el cupón es válido
+  const precioTotal = totalPrice - descuento;
 
   useEffect(() => {
     if (products) {
@@ -44,19 +47,21 @@ const CartSectionDetails = ({ products }) => {
       })
         .then(res => res.json())
         .then(res => {
-          setId(res.id)
-        })
+          setId(res.id);
+        });
     }
   }, [products]);
-
-  const totalPrice = calculateTotalPrice();
-  const descuento = totalPrice * 0.15;
-  const precioTotal = totalPrice - descuento;
 
   // Check if the input matches the correct discount code
   const handleInputChange = (e) => {
     setDiscountCode(e.target.value);
     setIsButtonDisabled(e.target.value !== "BIENVENIDO15%OFF");
+  };
+
+  const applyDiscount = () => {
+    if (discountCode === "BIENVENIDO15%OFF") {
+      setIsCouponApplied(true);
+    }
   };
 
   return (
@@ -72,7 +77,6 @@ const CartSectionDetails = ({ products }) => {
               <div className="flex items-center space-x-2">
                 <span className="text-xs sm:text-sm">⚠️IMPORTANTE: Tiempo de preparación y envío entre 10 a 15 días hábiles</span>
               </div>
-              
             </div>
           </div>
 
@@ -81,40 +85,36 @@ const CartSectionDetails = ({ products }) => {
               <h2 className="text-lg text-md ">Subtotal</h2>
               <span className="text-lg font-semibold text-md">${totalPrice.toFixed(2)}</span>
             </div>
-            
-            {showInput ? (
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <input
-                    type="text"
-                    value={discountCode}
-                    onChange={handleInputChange}
-                    className="p-2 border rounded-md w-full"
-                    placeholder="BIENVENIDO15%OFF"
-                  />
-                  <button
-                    className={`ml-2 p-2 rounded-md bg-pink-500 text-white ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={() => setShowInput(false)}
-                    disabled={isButtonDisabled}
-                  >
-                    Canjear
-                  </button>
-                </div>
-                <p className="text-sm text-gray-800">Descuento de bienvenida😎 Ingresa acá el cupón <b>BIENVENIDO15%OFF</b> para canjearlo.</p>
+
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <input
+                  type="text"
+                  value={discountCode}
+                  onChange={handleInputChange}
+                  className="p-2 border rounded-md w-full"
+                  placeholder="BIENVENIDO15%OFF"
+                />
+                <button
+                  className={`ml-2 p-2 rounded-md bg-pink-500 text-white ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={applyDiscount}
+                  disabled={isButtonDisabled}
+                >
+                  Canjear
+                </button>
               </div>
-            ) : (
+              <p className="text-sm text-gray-800">
+                Descuento de bienvenida😎 Ingresa acá el cupón <b>BIENVENIDO15%OFF</b> para canjearlo.
+              </p>
+            </div>
+
+            {isCouponApplied && (
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg text-md">Descuento</h2>
                 <span className="text-lg font-semibold text-md">${descuento.toFixed(2)}</span>
-                <button
-                  className="ml-2 p-1 text-pink-600 font-bold"
-                  onClick={() => setShowInput(true)}
-                >
-                  ✖
-                </button>
               </div>
             )}
-            
+
             <div className="flex items-center justify-between mb-4 text-lg">
               <h2>Total</h2>
               <span className='font-semibold'>${precioTotal.toFixed(2)}</span>
@@ -130,6 +130,6 @@ const CartSectionDetails = ({ products }) => {
       )}
     </>
   );
-}
+};
 
 export default CartSectionDetails;
