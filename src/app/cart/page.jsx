@@ -5,6 +5,7 @@ import CartProduct from '@/components/CartProduct/CartProduct';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import CartSectionDetails from '@/components/CartSectionDetails/CartSectionDetails';
 
+
 const Cart = () => {
   const router = useRouter(); // Initialize the router
   const [userData, setUserData] = useState(null);
