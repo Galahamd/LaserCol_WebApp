@@ -108,8 +108,12 @@ const ProfileComponent = () => {
         return;
       }
     
+      // Create an object with only the fields that should be updated
+      const { name, birthDate, country, city, address } = editedData;
+      const dataToUpdate = { name, birthDate, country, city, address };
+    
       try {
-        const updatedUser = await UpdateUser(userSession.id, editedData, userSession.token);
+        const updatedUser = await UpdateUser(userSession.id, dataToUpdate, userSession.token);
         setUserData(updatedUser); // Update the local user data with the response
         setIsEditing(false); // Exit the editing mode
         console.log('User updated successfully:', updatedUser);
@@ -117,6 +121,7 @@ const ProfileComponent = () => {
         console.error('Error saving user:', error);
       }
     };
+    
   
 
   return (
@@ -193,17 +198,6 @@ const ProfileComponent = () => {
             </div>
             <div>
               <h4 className="text-gray-600">Email</h4>
-              {/* {isEditing ? (
-                <input
-                  type="text"
-                  name="email"
-                  value={editedData.email}
-                  onChange={handleInputChange}
-                  className="px-2 py-1 border rounded"
-                />
-              ) : (
-                <p className="text-gray-800">{userData?.email}</p>
-              )} */}
               <p className="text-gray-800">{userData?.email}</p>
             </div>
             <div>
